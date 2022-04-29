@@ -61,4 +61,101 @@ When the installation is finished, it’s recommended that you run a security sc
                                                       sudo mysql
   
   <img width="561" alt="Start MySql" src="https://user-images.githubusercontent.com/103472595/165993144-a81c5c1e-9101-4735-9a64-cb9c2f2492fe.png">
+  
+  
+  To exit the MySQL console, type:
+
+                                                   exit
+  
+  ## INSTALLING PHP
+  
+  To install these 3 packages at once, run:
+
+                                    sudo apt install php libapache2-mod-php php-mysql
+  
+  
+Once the installation is finished, you can run the following command to confirm your PHP version:
+
+                                                    php -v
+  
+  If everything is done correctly, it will display the picture below
+  
+  <img width="487" alt="To check the PHP installed is working" src="https://user-images.githubusercontent.com/103472595/165994043-1339d881-3d4e-4523-a123-1d2a75577238.png">
+  
+  
+  ## CREATING A VIRTUAL HOST FOR YOUR WEBSITE USING APACHE
+  
+  Create the directory for projectlamp using ‘mkdir’ command as follows:
+
+                                      sudo mkdir /var/www/projectlamp
+  
+Next, assign ownership of the directory with your current system user:
+
+                                    sudo chown -R $USER:$USER /var/www/projectlamp
+  
+Then, create and open a new configuration file in Apache’s sites-available directory using your preferred command-line editor. Here, we’ll be using vi or vim (They are the same by the way):
+
+                                    sudo vi /etc/apache2/sites-available/projectlamp.conf
+  
+  
+This will create a new blank file. Paste in the following bare-bones configuration by hitting on i on the keyboard to enter the insert mode, and paste the text:
+
+                                        <VirtualHost *:80>
+                                            ServerName projectlamp
+                                            ServerAlias www.projectlamp 
+                                            ServerAdmin webmaster@localhost
+                                            DocumentRoot /var/www/projectlamp
+                                            ErrorLog ${APACHE_LOG_DIR}/error.log
+                                            CustomLog ${APACHE_LOG_DIR}/access.log combined
+                                        </VirtualHost>
+  
+  To save and close the file, simply follow the steps below:
+
+Hit the esc button on the keyboard
+  Type :
+  Type wq. w for write and q for quit
+Hit ENTER to save the file
+  
+You can use the ls command to show the new file in the sites-available directory
+
+                                      sudo ls /etc/apache2/sites-available
+  
+You will see something like this;
+
+                                      000-default.conf  default-ssl.conf  projectlamp.conf
+  
+  You can now use a2ensite command to enable the new virtual host:
+
+                                        sudo a2ensite projectlamp
+  
+You might want to disable the default website that comes installed with Apache. This is required if you’re not using a custom domain name, because in this case Apache’s default configuration would overwrite your virtual host. To disable Apache’s default website use a2dissite command , type:
+
+                                                    sudo a2dissite 000-default
+  
+To make sure your configuration file doesn’t contain syntax errors, run:
+
+                                                sudo apache2ctl configtest
+  
+Finally, reload Apache so these changes take effect:
+
+                                            sudo systemctl reload apache2
+  
+  Your new website is now active, but the web root /var/www/projectlamp is still empty. Create an index.html file in that location so that we can test that the virtual host works as expected:
+
+                sudo echo 'Hello LAMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectlamp/index.html
+  
+Now go to your browser and try to open your website URL using IP address:
+  
+
+                                               http://<Public-IP-Address>:80
+  
+  <img width="378" alt="Enabling our project lamp" src="https://user-images.githubusercontent.com/103472595/165995523-5489b4fc-7d1a-48bd-adfe-7a97a72a542e.png">
+<img width="780" alt="Hello lamp html" src="https://user-images.githubusercontent.com/103472595/165995527-7203504c-ee4e-40d9-8a6f-42169006bb55.png">
+
+
+
+  
+  
+  
+  
 
