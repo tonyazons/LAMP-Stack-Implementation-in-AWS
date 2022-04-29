@@ -128,9 +128,12 @@ You will see something like this;
 
                                         sudo a2ensite projectlamp
   
+   <img width="378" alt="Enabling our project lamp" src="https://user-images.githubusercontent.com/103472595/165995523-5489b4fc-7d1a-48bd-adfe-7a97a72a542e.png">
+  
 You might want to disable the default website that comes installed with Apache. This is required if you’re not using a custom domain name, because in this case Apache’s default configuration would overwrite your virtual host. To disable Apache’s default website use a2dissite command , type:
 
                                                     sudo a2dissite 000-default
+ 
   
 To make sure your configuration file doesn’t contain syntax errors, run:
 
@@ -149,8 +152,47 @@ Now go to your browser and try to open your website URL using IP address:
 
                                                http://<Public-IP-Address>:80
   
-  <img width="378" alt="Enabling our project lamp" src="https://user-images.githubusercontent.com/103472595/165995523-5489b4fc-7d1a-48bd-adfe-7a97a72a542e.png">
+ 
 <img width="780" alt="Hello lamp html" src="https://user-images.githubusercontent.com/103472595/165995527-7203504c-ee4e-40d9-8a6f-42169006bb55.png">
+  
+  ## ENABLE PHP ON THE WEBSITE
+  
+  In case you want to change this behavior, you’ll need to edit the /etc/apache2/mods-enabled/dir.conf file and change the order in which the index.php 
+  
+  file is listed within the DirectoryIndex directive:
+
+                                    sudo vim /etc/apache2/mods-enabled/dir.conf
+  
+                                    <IfModule mod_dir.c>
+                                            #Change this:
+                                            #DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm
+                                            #To this:
+                                            DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+                                    </IfModule>
+
+  After saving and closing the file, you will need to reload Apache so the changes take effect:
+
+                                              sudo systemctl reload apache2
+  
+  Create a new file named index.php inside your custom web root folder:
+
+                                          vim /var/www/projectlamp/index.php
+  
+This will open a blank file. Add the following text, which is valid PHP code, inside the file:
+
+                                                                    <?php
+                                                                    phpinfo();
+
+When you are finished, save and close the file, refresh the page and you will see a page similar to this:
+
+<img width="1728" alt="PHP home page" src="https://user-images.githubusercontent.com/103472595/165996693-a8f1c73b-d710-42ad-ad07-660eb5f27579.png">
+
+After checking the relevant information about your PHP server through that page, it’s best to remove the file you created as it contains sensitive information about your PHP environment -and your Ubuntu server. You can use rm to do so:
+
+                                          sudo rm /var/www/projectlamp/index.php
+
+You can always recreate this page if you need to access the information again later.
+
 
 
 
